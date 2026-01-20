@@ -6,3 +6,4 @@ joblib
 gunicorn
 numpy
 dash == 1.21.0
+werkzeug==2.0.3
