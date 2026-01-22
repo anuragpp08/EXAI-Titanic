@@ -50,9 +50,9 @@ To handle real deployment and compatibility challenges
 
 ## Machine Learning Problems Covered
 
-1. Binary Classification – Survival Prediction
+### 1. Binary Classification – Survival Prediction
 
-### Problem
+#### Problem
 - Predict whether a passenger survived the Titanic disaster.
 - Model Type
 - Binary Classification (RandomForestClassifier)
@@ -65,9 +65,9 @@ To handle real deployment and compatibility challenges
 
 
 
-2. Regression – Ticket Fare Prediction
+### 2.Regression – Ticket Fare Prediction
 
-### Problem
+#### Problem
 - Predict the ticket fare paid by a passenger.
 - odel Type
 - Regression (RandomForestRegressor)
@@ -80,9 +80,9 @@ To handle real deployment and compatibility challenges
 
 
 
-3. Multiclass Classification – Embarkation Port Prediction
+### 3. Multiclass Classification – Embarkation Port Prediction
 
-### Problem
+#### Problem
 - Predict the port from which a passenger boarded the ship.
 - Model Type
 - Why Explainability Matters
@@ -123,7 +123,7 @@ To handle real deployment and compatibility challenges
 
 
 ## Application Architecture
-
+```python
 User Browser
    ↓
 Render (Docker Container)
@@ -137,7 +137,7 @@ Dash Applications
 ExAI
    ↓
 SHAP + Machine Learning Models
-
+```
 
 
 
@@ -155,25 +155,25 @@ SHAP + Machine Learning Models
 
 ## Challenges Faced and Solutions
 
-1. Dependency and Version Conflicts
+### 1. Dependency and Version Conflicts
 
-### Issue
-Incompatibility between ExAI, shap, dtreeviz, dash, and sklearn
-Older examples relied on deprecated APIs
+#### Issue
+- Incompatibility between ExAI, shap, dtreeviz, dash, and sklearn
+- Older examples relied on deprecated APIs
 
-### Solution
-Avoided aggressive version pinning
-Removed deprecated parameters
-Used supported APIs only
-Let pip resolve compatible versions
-
-
+#### Solution
+- Avoided aggressive version pinning
+- Removed deprecated parameters
+- Used supported APIs only
+- Let pip resolve compatible versions
 
 
 
-2. Pickle and Joblib Serialization Failures
 
-### Issue
+
+### 2. Pickle and Joblib Serialization Failures
+
+#### Issue
 
 Errors such as:
 ModuleNotFoundError: numpy._core
@@ -183,34 +183,34 @@ Inconsistent scikit-learn version warnings
 ### Root Cause
 Pickled models are not portable across environments
 
-### Solution
+#### Solution
 Removed all serialized explainer files
 Rebuilt models and explainers dynamically at application startup
 
 
-3. SHAP Output Shape Errors
+### 3. SHAP Output Shape Errors
 
-### Issue
+#### Issue
 
 - AssertionError: shap_values should be 2d, instead shape=(n, features, classes)
 - Root Cause
 - Binary and multiclass classifiers return class-wise SHAP values
 - Older dashboard logic assumed 2D arrays
 
-### Solution
+#### Solution
 
 - Used supported ExAI defaults
 - Avoided unsupported SHAP interaction overrides
 - Let the framework handle SHAP internally
 
 
-4. Memory and Worker Crashes
+### 4. Memory and Worker Crashes
 
-### Issue
+#### Issue
 - Render free tier has limited RAM
 - SHAP interaction plots are memory intensive
 
-### Solution
+#### Solution
 
 - Reduced model complexity
 - Disabled unnecessary interaction-heavy components
