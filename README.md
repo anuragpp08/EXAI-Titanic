@@ -1,7 +1,13 @@
-# explainingtitanic
+# EXAI Titanic – Explainable AI Dashboard
 Demonstration of [ExAI](https://github.com/anuragpp08/ExAI) package. 
 
-A Dash dashboard app that that displays model quality, permutation importances, SHAP values and interactions, and individual trees for sklearn compatible models.
+## Overview
+
+EXAI Titanic is an end-to-end Explainable AI (XAI) project built to demonstrate how machine learning predictions can be made transparent, interpretable, and trustworthy.
+
+Instead of treating models as black boxes, this project uses ExAI and SHAP to explain model behavior across classification, regression, and multiclass classification tasks using the Titanic dataset.
+
+The project is fully containerized using Docker and deployed on Render, while addressing real-world challenges such as dependency conflicts, serialization issues, memory limits, and framework deprecations.
 
 ## Installation
 install with `pip install ExAI`
@@ -24,342 +30,228 @@ To uninstall it, first enable the shell buildpack: https://github.com/niteoweb/h
 and then add `pip uninstall -y xgboost` to `.heroku/run.sh` 
 ## Documentation
 
-<!-- [explainerdashboard.readthedocs.io](http://explainerdashboard.readthedocs.io). -->
+<!-- [ExAI.readthedocs.io](http://ExAI.readthedocs.io). -->
 
 Example [notebook](https://github.com/anuragpp08/ExAI/dashboard_examples.ipynb).
 
-EXAI Titanic – Explainable AI Dashboard
 
-An end-to-end Explainable AI (XAI) project that demonstrates classification, regression, and multiclass classification using the Titanic dataset, built with ExplainerDashboard, SHAP, Dash, and Flask, and deployed using Docker on Render.
+## Project Goals
 
+The primary objectives of this project are:
+To demonstrate practical Explainable AI techniques
+To visualize how features influence model predictions
+To compare explainability across different ML problem types
+To build a production-ready ML dashboard
+To handle real deployment and compatibility challenges
 
 
 
-Project Objective
 
-The goal of this project is not just prediction, but explanation.
 
-Traditional machine learning models act as black boxes. This project focuses on:
+## Machine Learning Problems Covered
 
-Explaining why a prediction was made
+1. Binary Classification – Survival Prediction
 
-Visualizing feature importance
+### Problem
+- Predict whether a passenger survived the Titanic disaster.
+- Model Type
+- Binary Classification (RandomForestClassifier)
+- Why Explainability Matters
+- Understand why a passenger was predicted to survive or not
+- Identify the influence of features like age, sex, passenger class, and fare
+- Improve trust in predictions by exposing decision logic
 
-Understanding feature interactions
 
-Making ML decisions transparent and trustworthy
 
 
 
+2. Regression – Ticket Fare Prediction
 
+### Problem
+- Predict the ticket fare paid by a passenger.
+- odel Type
+- Regression (RandomForestRegressor)
+- Why Explainability Matters
+- Quantify how each feature increases or decreases fare prediction
+- Understand numeric contribution instead of only final output
+- Analyze relationships between socio-economic features and pricing
 
-What This Project Explains
 
-The project contains three explainable ML dashboards, each solving a different ML problem:
 
-Classifier Dashboard – Survival Prediction
 
-Problem: Did a passenger survive the Titanic disaster?
 
-Type: Binary Classification
+3. Multiclass Classification – Embarkation Port Prediction
 
-Why explainable?
+### Problem
+- Predict the port from which a passenger boarded the ship.
+- Model Type
+- Why Explainability Matters
+- Explain why one class is chosen over others
+- Visualize class-wise feature importance
+- Demonstrate SHAP explanations for multiclass outputs
 
-To understand how age, gender, class, fare, etc. influence survival probability
 
-Helps answer “Why was this passenger predicted to survive?”
 
 
 
+## Key Features
 
+- Feature importance plots
+- SHAP value visualizations
+- Individual prediction explanations
+- Partial dependence plots
+- Feature interaction plots
+- What-if analysis
+- Multiple dashboards served from a single application
 
 
-Regression Dashboard – Ticket Fare Prediction
 
-Problem: What was the ticket fare paid by a passenger?
 
-Type: Regression
 
-Why explainable?
+## Technology Stack
 
-Shows how each feature increases or decreases the predicted fare
+- Python 3.9
+- Scikit-learn
+- ExAI
+- SHAP
+- Dash
+- Flask- 
+- DockerRender (Deployment)
 
-Useful for understanding numeric impact instead of just predictions
 
 
 
 
+## Application Architecture
 
+User Browser
+   ↓
+Render (Docker Container)
+   ↓
+Gunicorn
+   ↓
+Flask Server
+   ↓
+Dash Applications
+   ↓
+ExAI
+   ↓
+SHAP + Machine Learning Models
 
-Multiclass Dashboard – Embarkation Port Prediction
 
-Problem: From which port did the passenger board the ship?
 
-Type: Multiclass Classification (3 classes)
 
-Why explainable?
+## Deployment Strategy
 
-Explains why one class was chosen over others
+- Application is containerized using Docker
+- Models are trained dynamically at runtime
+- No serialized explainers are stored
+- Gunicorn-  is used as the WSGI server
+- Render handles container deployment and hosting
 
-Demonstrates class-wise SHAP explanations and interactions
 
 
 
 
+## Challenges Faced and Solutions
 
+1. Dependency and Version Conflicts
 
-Tech Stack
+### Issue
+Incompatibility between ExAI, shap, dtreeviz, dash, and sklearn
+Older examples relied on deprecated APIs
 
-Python 3.9
-
-Scikit-learn
-
-ExplainerDashboard
-
-SHAP
-
-Dash & Flask
-
-Docker
-
-Render (Deployment)
-
-
-
-
-
-Features & Visualizations
-
-Feature importance plots
-
-SHAP value plots
-
-Individual prediction explanations
-
-Partial dependence plots
-
-Feature interaction plots
-
-What-if analysis
-
-Multiple dashboards under one application
-
-
-
-
-
-Architecture Overview
-
-User → Browser
-     → Render (Docker)
-     → Gunicorn
-     → Flask Server
-     → Dash Apps
-     → ExplainerDashboard
-     → SHAP + ML Models
-
-
-
-
-Challenges Faced (REAL TALK)
-
-This project faced serious real-world engineering challenges:
-
-1. Version Incompatibility Hell
-
-explainerdashboard, shap, dtreeviz, dash, sklearn
-
-Old Heroku examples relied on outdated pinned versions
-
-New environments broke old assumptions
-
-
-Fix:
-
-Removed serialized explainer .joblib files
-
-Regenerated explainers at runtime
-
-Stopped relying on deprecated APIs
-
-
-
-
-
-2. Pickle / Joblib Failures
-
-Errors like:
-
-ModuleNotFoundError: numpy._core
-
-code() takes at most 16 arguments
-
-InconsistentVersionWarning
-
-
-Root cause: Pickled models are NOT portable across versions.
-
-Fix:
-
-No pickling explainers
-
-Train models dynamically at app startup
-
-
-
-
-
-3. SHAP Shape Errors
-
-AssertionError: shap_values should be 2d, instead shape=(200, 21, 2)
-
-Root cause:
-
-Binary classifiers produce class-wise SHAP outputs
-
-Older dashboard code expected 2D arrays
-
-
-Fix:
-
-Switched to supported explainer patterns
-
-Avoided deprecated parameters like shap_interaction
-
-Used default ExplainerDashboard behavior
-
-
-
-
-
-4. Memory & Worker Crashes
-
-Render free tier has limited RAM
-
-SHAP interaction plots are expensive
-
-
-Fix:
-
-Reduced model complexity
-
-Disabled unnecessary interaction-heavy components
-
-Avoided overloading Gunicorn workers
-
-
-
-
-
-5. Heroku vs Render Differences
-
-Heroku previously allowed older Python stacks
-
-Render uses modern Linux + stricter dependency resolution
-
-
-Lesson: “If it runs on Heroku, it doesn’t mean it will run everywhere.”
-
-
-
-
-Final Stable Approach (Option A)
-
-✔ Use current versions
-✔ No pickled explainers
-✔ Train models inside dashboard.py
-✔ Let ExplainerDashboard manage SHAP internally
-✔ Dockerize everything
-
-This approach:
-
-Works with modern environments
-
-Avoids fragile serialization
-
-Is production-safe
-
-
-
-
-
-Docker Setup
-
-Dockerfile
-
-FROM python:3.9-slim
-
-WORKDIR /app
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . .
-
-CMD ["gunicorn", "dashboard:app", "--bind", "0.0.0.0:10000"]
-
-
-
-
-requirements.txt (Important Notes)
-
-Avoid pinning too aggressively
-
+### Solution
+Avoided aggressive version pinning
+Removed deprecated parameters
+Used supported APIs only
 Let pip resolve compatible versions
 
-Do not include Python version here
+
+
+
+
+2. Pickle and Joblib Serialization Failures
+
+### Issue
+
+Errors such as:
+ModuleNotFoundError: numpy._core
+code() takes at most 16 arguments
+Inconsistent scikit-learn version warnings
+
+### Root Cause
+Pickled models are not portable across environments
+
+### Solution
+Removed all serialized explainer files
+Rebuilt models and explainers dynamically at application startup
+
+
+3. SHAP Output Shape Errors
+
+### Issue
+
+- AssertionError: shap_values should be 2d, instead shape=(n, features, classes)
+- Root Cause
+- Binary and multiclass classifiers return class-wise SHAP values
+- Older dashboard logic assumed 2D arrays
+
+### Solution
+
+- Used supported ExAI defaults
+- Avoided unsupported SHAP interaction overrides
+- Let the framework handle SHAP internally
+
+
+4. Memory and Worker Crashes
+
+### Issue
+- Render free tier has limited RAM
+- SHAP interaction plots are memory intensive
+
+### Solution
+
+- Reduced model complexity
+- Disabled unnecessary interaction-heavy components
+- Avoided pre-computing expensive SHAP values
 
 
 
 
 
-Live Deployment
-
-Live URL will be available soon.
- 
-> Still working on deployment.
 
 
+# Docker Configuration
+
+## Dockerfile
+```Dockerfile
+FROM python:3.9-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+CMD ["gunicorn", "dashboard:app", "--bind", "0.0.0.0:10000"]
+
+```
 
 
+## Live Deployment
 
-
-Key Learnings
-
-Explainability ≠ plug-and-play
-
-Version compatibility matters more than code correctness
-
-Serialization is fragile
-
-Deployment exposes hidden assumptions
-
-Debugging logs is a real engineering skill
+> Live URL will be available soon.
 
 
 
 
+## Key Learnings
 
-Why This Project Matters
+Explainable AI requires careful handling of model internals
+Serialization is fragile across environments
+Dependency management is a critical engineering skill
+Deployment exposes hidden assumptions in ML projects
+Debugging production failures is part of real-world ML engineering
 
-This project proves that:
+## Conclusion
 
-We understood ML
-
-We understood XAI
-
-We understood deployment
-
-We can debug real production failures
-
-We didn’t give up when things broke
-
-
-
-
-
-Final Note
-
-This project was difficult by nature, not because of lack of skill.
-we didn’t copy-paste. We fought the system, understood it, and adapted.
-
+This project demonstrates not only machine learning and explainability concepts, but also real-world problem solving involving deployment, compatibility, and system design.
+It reflects a complete journey from experimentation to production, highlighting both technical depth and engineering resilience.
