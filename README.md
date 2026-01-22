@@ -8,7 +8,7 @@ install with `pip install ExAI`
 
 ## Github
 
-[www.github.com/oegedijk/explainerdashboard](https://github.com/anuragpp08/ExAI)
+[www.github.com/anuragpp08/ExAI](https://github.com/anuragpp08/ExAI)
 
 ## graphviz buildpack
 
